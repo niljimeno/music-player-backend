@@ -9,5 +9,5 @@
 (defn -main
   "Comment example"
   [& args]
-  (db/run-example))
-  ;; (http/start-server router/handler {:host "0.0.0.0" :port 8080}))
+  (println "up and running")
+  (http/start-server router/handler {:host "0.0.0.0" :port 8080}))

@@ -19,10 +19,11 @@
   []
   (try (db-do-commands db
                        (create-table-ddl :news
-                                         [[:timestamp :datetime :default :current_timestamp ]
+                                         [[:timestamp :datetime :default :current_timestamp]
                                           [:url :text]
                                           [:title :text]
-                                          [:body :text]]))
+                                          [:body :text]]
+                                         {:conditional? true})) ;; conditional: if not exists
        (catch Exception e
          (println (.getMessage e)))))
 
