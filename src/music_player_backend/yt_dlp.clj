@@ -1,0 +1,21 @@
+(ns music-player-backend.yt-dlp
+  (:require [clojure.java.shell :refer [sh]]))
+
+(defn run-command []
+  (:out (sh "ls" "-la")))
+
+(defn search [query]
+  (:out (sh "yt-dlp"
+            (str "ytsearch5:"
+                 (str "\"" query "\""))
+            "--get-id"
+            "--get-title"
+            "--no-warnings")))
+
+(defn download-song [path yt-url]
+  (:out (sh "yt-dlp"
+            "-x"
+            "--extract-audio"
+            "-o"
+            path
+            yt-url)))

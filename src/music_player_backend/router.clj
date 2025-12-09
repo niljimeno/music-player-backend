@@ -1,14 +1,12 @@
-(ns music-player-backend.router)
-
-(defn respond [body & {:keys [status] :or {status 200}}]
-  {:status (or status 200)
-   :headers {"content-type" "text/plain"}
-   :body body})
+(ns music-player-backend.router
+  (:require [music-player-backend.routes.song :as route-song]
+            [music-player-backend.routes.search :as route-search]
+            [music-player-backend.routes.not-found :as route-not-found]
+            [music-player-backend.server :as server]))
 
 (defn handler [req]
   (let [uri (:uri req)]
-    (println "route is" uri)
     (cond
-     (= uri "/") (respond "hello main!")
-     (= uri "/route") (respond "example route")
-     :else (respond "what??" :status 404))))
+     (= uri "/song") (route-song/route req)
+     (= uri "/search") (route-search/route req)
+     :else (route-not-found/route req))))
