@@ -1,7 +1,6 @@
 (ns music-player-backend.json
   (:require [clojure.data.json :as json]))
 
-
 (defn get-value
   "Get value from a json string"
   [value str]

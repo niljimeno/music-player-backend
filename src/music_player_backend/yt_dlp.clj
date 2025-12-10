@@ -3,8 +3,7 @@
 
 (defn search [query]
   (:out (sh "yt-dlp"
-            (str "ytsearch5:"
-                 (str "\"" query "\""))
+            (str "ytsearch5:" "\"" query "\"")
             "--get-id"
             "--get-title"
             "--no-warnings")))

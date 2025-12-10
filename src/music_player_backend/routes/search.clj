@@ -6,6 +6,7 @@
 (defn route
   "Route to search for songs"
   [req]
-  (let [query (json/value-from-request :query req)]
-    (let [query-results (yt-dlp/search query)]
-      (server/respond query-results))))
+  (let [query (json/value-from-request :query req)
+        query-results (yt-dlp/search query)]
+    (server/respond query-results)))
+
