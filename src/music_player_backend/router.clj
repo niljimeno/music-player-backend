@@ -4,7 +4,9 @@
             [music-player-backend.routes.not-found :as route-not-found]
             [music-player-backend.server :as server]))
 
-(defn handler [req]
+(defn handler
+  "Handle http requests and send them to the correct route function"
+  [req]
   (let [uri (:uri req)]
     (cond
      (= uri "/song") (route-song/route req)

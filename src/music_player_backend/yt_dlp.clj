@@ -1,9 +1,6 @@
 (ns music-player-backend.yt-dlp
   (:require [clojure.java.shell :refer [sh]]))
 
-(defn run-command []
-  (:out (sh "ls" "-la")))
-
 (defn search [query]
   (:out (sh "yt-dlp"
             (str "ytsearch5:"

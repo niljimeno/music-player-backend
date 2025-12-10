@@ -64,6 +64,14 @@
 ;; fuera del rango de let:
 (println x) ;; 10
 
+
+;; multiples valores con let
+(let [x 1
+      y 2
+      z (+ x y)]
+  (println x y z)) ;; 1 2 3
+
+
 ;; funcion local (fn), sin definir (defn)
 ;; ahora mismo no tiene ningun uso
 (println ((fn suma [a b] (+ a b)) 2 3)) ;; 5

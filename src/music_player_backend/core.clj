@@ -7,7 +7,7 @@
             [music-player-backend.router :as router]))
 
 (defn -main
-  "Comment example"
+  "Main function to run the program"
   [& args]
   (db/run-example)
   (println "Server up and running")

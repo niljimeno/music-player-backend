@@ -43,7 +43,7 @@
   (query db ["select * from news"]))
 
 (defn run-example
-  "launch!"
+  "Run SQLite example"
   []
   (println "Running database example")
   (create-db)
