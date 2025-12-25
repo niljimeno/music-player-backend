@@ -1,6 +1,8 @@
 (ns music-player-backend.router
   (:require [music-player-backend.routes.song :as route-song]
+            [music-player-backend.routes.login :as route-login]
             [music-player-backend.routes.search :as route-search]
+            [music-player-backend.routes.register :as route-register]
             [music-player-backend.routes.not-found :as route-not-found]))
 
 (defn handler
@@ -8,5 +10,7 @@
   [req]
   (let [uri (:uri req)]
     (cond (= uri "/song") (route-song/route req)
+          (= uri "/login") (route-login/route req)
           (= uri "/search") (route-search/route req)
+          (= uri "/register") (route-register/route req)
           :else (route-not-found/route req))))

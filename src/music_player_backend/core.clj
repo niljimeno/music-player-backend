@@ -7,6 +7,6 @@
 (defn -main
   "Main function to run the program"
   [& _]
-  (db/run-example)
+  (db/set-db)
   (println "Server up and running")
   (http/start-server router/handler {:host "0.0.0.0" :port 8080}))

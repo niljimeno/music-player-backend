@@ -19,4 +19,4 @@ COPY ./ /var/www/music-player
 
 EXPOSE 8080
 
-CMD ["ash"]
+CMD ["lein", "run"]
