@@ -9,8 +9,10 @@
   "Handle http requests and send them to the correct route function"
   [req]
   (let [uri (:uri req)]
-    (cond (= uri "/song") (route-song/route req)
-          (= uri "/login") (route-login/route req)
-          (= uri "/search") (route-search/route req)
-          (= uri "/register") (route-register/route req)
-          :else (route-not-found/route req))))
+    ((case uri
+       "/song" route-song/route
+       "/login" route-login/route
+       "/search" route-search/route
+       "/register" route-register/route
+       route-not-found/route)
+     req)))
