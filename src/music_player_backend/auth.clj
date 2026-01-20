@@ -1,5 +1,6 @@
 (ns music-player-backend.auth
   (:require [clojure.java.jdbc :as jbdc])
+  (:require [buddy.hashers :as hashers])
   (:gen-class))
 
 (def db
@@ -8,14 +9,15 @@
    :subname     "db/database.db"})
 
 (defn insert-user [data username]
-  (jbdc/insert! db :users data)
-  (println "Inserted user:" username)
-  :user-created)
+  (let [hashed-data (assoc data :password (hashers/derive (:password data) {:alg :argon2id}))]
+    (jbdc/insert! db :users hashed-data)
+    (println "Inserted user:" username "- hashed-pass:" (:password hashed-data))
+    :user-created))
 
 (defn check-password [user-password db-password]
-  (if (= user-password db-password)
-      :user-login
-      :incorrect-password))
+  (if (hashers/check user-password db-password)
+    :user-login
+    :incorrect-password))
 
 (defn register-user [data]
   (try
