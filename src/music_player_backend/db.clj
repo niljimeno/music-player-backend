@@ -8,18 +8,32 @@
    :subname     "db/database.db"})
 
 (defn user-table []
-  (jbdc/create-table-ddl :users
-                         [[:id :int :primary :key]
-                          [:username :text]
-                          [:password :text]]
-                         {:conditional? true}))
+  (println "Start user-table")
+  (map #(apply jbdc/create-table-ddl
+               (conj % {:conditional? true}))
+       [[:users
+         [[:id :int :primary :key]
+          [:username :text :unique]
+          [:password :text]]]
+
+        [:playlists
+         [[:id :int :primary :key]
+          [:userId :int]]]
+
+        [:songs
+         [[:id :int :primary :key]
+          [:url :text]]]
+
+        [:connections
+         [[:id :int :primary :key]
+          [:songId :int]
+          [:playlistId :int]
+          [:trackNumber :int]]]]))
 
 (defn create-db []
   (jbdc/execute! db ["PRAGMA foreign_keys = ON;"])
-  (try (jbdc/db-do-commands db
-                            (user-table))
-       (catch Exception e
-         (println (.getMessage e)))))
+  (doall (map (partial jbdc/db-do-commands db)
+              (user-table))))
 
 (defn set-db []
   (println "Setting DB...")
