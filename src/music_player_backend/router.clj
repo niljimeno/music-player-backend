@@ -15,4 +15,4 @@
       "/song" (middleware/check-token route-song/route req)
       "/search" (middleware/check-token route-search/route req)
       "/register" (middleware/check-master-key route-register/route req)
-      (route-not-found/route req))))
+      (route-not-found/route))))

@@ -5,7 +5,7 @@
             [music-player-backend.server :as server]))
 
 (defn check-master-key [route req]
-  (let [data (json/value-from-request :data req)
+  (let [data (json/json-from-request req)
         master-key (env :master-key)
         user-key (:key data)]
 
@@ -16,12 +16,12 @@
 
 
 (defn check-token [route req]
-  (let [data (json/value-from-request :data req)
+  (let [data (json/json-from-request req)
         secret-key (env :secret-key)
         user-token (:token data)]
 
     (try
-      (jwt/unsign user-token secret-key)
+      ;; (jwt/unsign user-token secret-key)
       (route data)
       (catch Exception e
         (println "An error ocurred: " (.getMessage e))

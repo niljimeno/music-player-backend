@@ -4,8 +4,8 @@
 
 (defn route
   "Route to register a new user"
-  [req]
-  (let [result (auth/register-user req)]
+  [data]
+  (let [result (auth/register-user data)]
 
     (case result
       :user-created (server/respond "User registered" :status 201)

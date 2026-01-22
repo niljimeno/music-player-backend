@@ -6,7 +6,7 @@
 (defn route
   "Route to log-in session"
   [req]
-  (let [data (json/value-from-request :data req)
+  (let [data (json/json-from-request req)
         result (auth/login-user data)]
 
     (case result
