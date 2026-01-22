@@ -17,7 +17,35 @@
                     :userId 0})
   (db/crud :playlists
            :update {:id 1
-                    :new {:name "Geronimo"}})
+                    :new {:name "Temitas"}})
+  (db/crud :songs
+           :insert {:name "El rap de fernanfloo"})
+
+  (db/crud :songs
+           :insert {:name "El rubiuh - Minero"})
+
+  (db/crud :songs
+           :insert {:name "Cuerno de babu"})
+
+  (db/crud :songs
+           :insert {:name "Caballo homosexual de las montanas"})
+
+  (db/crud :songs
+           :insert {:name "Ratas congeladas"})
+
   (println (db/crud :playlists
-                    :read)))
+                    :read))
+  (println (db/crud :songs
+                    :read))
+
+  (db/update-playlist {:id 1
+                       :new [{:songid 1
+                              :tracknumber 1}
+                             {:songid 2
+                              :tracknumber 2}]})
+  (db/update-playlist {:id 1
+                       :new [{:songid 2
+                              :tracknumber 2}]})
+
+  (println "Connections:" (db/crud :connections :read)))
 

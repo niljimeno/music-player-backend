@@ -1,6 +1,5 @@
 (ns music-player-backend.db
-  (:require [clojure.java.jdbc :as jdbc]
-            [clojure.java.jdbc :as jbdc])
+  (:require [clojure.java.jdbc :as jdbc])
   (:gen-class))
 
 (def db
@@ -34,31 +33,72 @@
           [:trackNumber :integer]]]]))
 
 (defn crud-delete
-  [table id]
+  [table data]
   (case table
-    :songs (jdbc/delete! db :connections ["songId = ?" id])
-    :playlists (jdbc/delete! db :connections ["playlistId = ?" id]))
-  (jdbc/delete! db table ["id = ?" id]))
+    :songs (jdbc/delete! db :connections ["songId = ?" data])
+    :playlists (jdbc/delete! db :connections ["playlistId = ?" data]))
+  (jdbc/delete! db table ["id = ?" data]))
 
 (defn crud
   ([table action data]
    (case action
-     :read (jbdc/query db (format "SELECT * FROM %s WHERE %s = %d"
+     ;; :read [:id id]
+     :read (jdbc/query db (format "SELECT * FROM %s WHERE %s = %d"
                                   (name table)
                                   (name (first (:match data)))
                                   (second (:match data))))
+
+     ;; :insert data
      :insert (jdbc/insert! db table data)
-     :update (jdbc/update! db table (:new data) ["id = ?" (:id data)])
-     :delete (crud-delete table (:id data))))
+
+     ;; :delete {:new data :id id}
+     :update (jdbc/update! db table (:new data)
+                           ["id = ?" (:id data)])
+
+     ;; :delete id
+     :delete (crud-delete table data)))
+
   ([table action]
-   (println action)
    (case action
-     :read (jbdc/query db (str "SELECT * FROM " (name table))))))
+     ;; (crud table :read)
+     :read (jdbc/query db (str "SELECT * FROM " (name table))))))
+
+(defn id-less
+  [x]
+  (dissoc x :id))
+
+(defn in?
+  [x l]
+  (some (partial = x) l))
 
 (defn update-playlist
   [data]
-  (let [id (:id data)
-        new-songs (:content data)]))
+  (let [playlist-id (:id data)
+        previous-songs (->> (crud :connections :read)
+                            (map id-less))
+        new-songs (->> (:new data)
+                       (map id-less)
+                       (map #(assoc % :playlistid playlist-id)))]
+
+    (println "Previous:" previous-songs)
+    (println "New:" new-songs "yay")
+    (println "Change:" (filter #(not (in? % previous-songs))
+                               new-songs))
+    (println "NChange:" (filter #(not (in? % new-songs))
+                                previous-songs))
+
+    (->> (filter #(not (in? % previous-songs))
+                 new-songs)
+         (map #(assoc % :playlistid playlist-id))
+         (map (partial crud :connections :insert))
+         doall)
+
+    (->> (filter #(not (in? % new-songs))
+                 previous-songs)
+         (map #(jdbc/delete! db :connections
+                             ["songid = ? AND playlistid = ? AND tracknumber = ?"
+                              (:songid %) playlist-id (:tracknumber %)]))
+         doall)))
 
 ;; create playlist: needs user id
 
