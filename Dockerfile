@@ -4,7 +4,7 @@ FROM alpine:3.18
 RUN apk add git make
 
 # install yt-dlp
-RUN apk add python3
+RUN apk add python3 ffmpeg
 RUN git clone https://github.com/yt-dlp/yt-dlp /var/www/yt-dlp
 RUN echo "#!/usr/bin/env sh" > /usr/bin/yt-dlp
 RUN echo 'exec "${PYTHON:-python3}" -Werror -Xdev "/var/www/yt-dlp/yt_dlp/__main__.py" "$@"' >> /usr/bin/yt-dlp
@@ -16,6 +16,9 @@ RUN apk add clojure leiningen
 # run the application
 WORKDIR /var/www/music-player
 COPY ./ /var/www/music-player
+
+ENV SECRET_KEY=secretkey
+ENV MASTER_KEY=masterkey
 
 EXPOSE 8080
 
