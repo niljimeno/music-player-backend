@@ -18,10 +18,12 @@
 
         [:playlists
          [[:id :int :primary :key]
+          [:name :text :unique]
           [:userId :int]]]
 
         [:songs
          [[:id :int :primary :key]
+          [:name :text]
           [:url :text]]]
 
         [:connections
@@ -29,6 +31,20 @@
           [:songId :int]
           [:playlistId :int]
           [:trackNumber :int]]]]))
+
+(defn create-playlist
+  [data]
+  (jbdc/insert! db :playlists data))
+
+(defn update-playlist
+  ([data]
+   (let [new-data (jbdc/query db ["SELECT * FROM playlists
+                                  WHERE id = ?" (:id data)])]
+     (if (empty? new-data)
+       (create-playlist data)
+       (update-playlist new-data data))))
+  ([new-data data]
+   (println "Exists")))
 
 (defn create-db []
   (jbdc/execute! db ["PRAGMA foreign_keys = ON;"])
