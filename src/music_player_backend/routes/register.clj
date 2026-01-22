@@ -1,13 +1,11 @@
 (ns music-player-backend.routes.register
   (:require [music-player-backend.server :as server]
-            [music-player-backend.json :as json]
             [music-player-backend.auth :as auth]))
 
 (defn route
   "Route to register a new user"
   [req]
-  (let [data (json/value-from-request :data req) 
-        result (auth/register-user data)]
+  (let [result (auth/register-user req)]
 
     (case result
       :user-created (server/respond "User registered" :status 201)

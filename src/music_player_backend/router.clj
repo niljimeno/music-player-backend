@@ -1,5 +1,6 @@
 (ns music-player-backend.router
-  (:require [music-player-backend.routes.song :as route-song]
+  (:require [music-player-backend.middleware :as middleware]
+            [music-player-backend.routes.song :as route-song]
             [music-player-backend.routes.login :as route-login]
             [music-player-backend.routes.search :as route-search]
             [music-player-backend.routes.register :as route-register]
@@ -9,10 +10,9 @@
   "Handle http requests and send them to the correct route function"
   [req]
   (let [uri (:uri req)]
-    ((case uri
-       "/song" route-song/route
-       "/login" route-login/route
-       "/search" route-search/route
-       "/register" route-register/route
-       route-not-found/route)
-     req)))
+    (case uri
+      "/login" (route-login/route req)
+      "/song" (middleware/check-token route-song/route req)
+      "/search" (middleware/check-token route-search/route req)
+      "/register" (middleware/check-master-key route-register/route req)
+      (route-not-found/route req))))
