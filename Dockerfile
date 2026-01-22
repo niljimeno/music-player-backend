@@ -16,7 +16,9 @@ RUN apk add clojure leiningen
 # run the application
 WORKDIR /var/www/music-player
 COPY ./ /var/www/music-player
-RUN chmod -R 777 /var/www/music-player
+
+ENV SECRET_KEY=secretkey
+ENV MASTER_KEY=masterkey
 
 EXPOSE 8080
 
