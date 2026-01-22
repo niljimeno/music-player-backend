@@ -6,7 +6,7 @@
 (defn route
   "Route to register a new user"
   [req]
-  (let [data (json/value-from-request :data req) 
+  (let [data (json/json-from-request req)
         result (auth/register-user data)]
 
     (case result

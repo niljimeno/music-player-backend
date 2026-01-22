@@ -5,6 +5,8 @@
             :url "https://www.eclipse.org/legal/epl-2.0/"}
   :dependencies [[org.clojure/clojure "1.12.2"]
                  [aleph "0.9.3"]
+                 [environ "1.2.0"]
+                 [buddy/buddy-sign "3.6.1-359"]
                  [buddy/buddy-hashers "2.0.167"]
                  [org.clojure/java.jdbc "0.7.12"]
                  [org.clojure/data.json "2.5.1"]

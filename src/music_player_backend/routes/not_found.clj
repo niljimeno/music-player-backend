@@ -3,5 +3,5 @@
 
 (defn route
   "Default 404 route"
-  [_]
+  []
   (server/respond "Route not found!" :status 404))
