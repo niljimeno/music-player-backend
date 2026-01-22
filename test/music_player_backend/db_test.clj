@@ -8,18 +8,16 @@
   (println "deleted database")
   (db/set-db)
   (println "set'd database")
-  ;; (db/update-playlist {:id 3
-  ;;                      :name "Geronima"
-  ;;                      :userId 0})
-  ;; (db/update-playlist {:id 3
-  ;;                      :name "Geronimo"
-  ;;                      :userId 0})
 
   (db/crud :playlists
-           :insert {:id 3
-                    :name "Geronima"
+           :insert {:name "Geronima"
                     :userId 0})
   (db/crud :playlists
-           :update {:id 3
-                    :new {:name "Geronimo"}}))
+           :insert {:name "Alvaro"
+                    :userId 0})
+  (db/crud :playlists
+           :update {:id 1
+                    :new {:name "Geronimo"}})
+  (println (db/crud :playlists
+                    :read)))
 
