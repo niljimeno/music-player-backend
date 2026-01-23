@@ -12,7 +12,8 @@
   (let [uri (:uri req)]
     (case uri
       "/login" (route-login/route req)
-      "/song" (middleware/check-token route-song/route req)
+      "/song" (route-song/route req)
+      ;; "/song" (middleware/check-token route-song/route req)
       "/search" (middleware/check-token route-search/route req)
       "/register" (middleware/check-master-key route-register/route req)
       (route-not-found/route))))
