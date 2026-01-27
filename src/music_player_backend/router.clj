@@ -4,6 +4,7 @@
             [music-player-backend.routes.login :as route-login]
             [music-player-backend.routes.search :as route-search]
             [music-player-backend.routes.register :as route-register]
+            [music-player-backend.routes.playlist :as route-playlist]
             [music-player-backend.routes.not-found :as route-not-found]))
 
 (defn handler
@@ -11,9 +12,9 @@
   [req]
   (let [uri (:uri req)]
     (case uri
-      "/login" (route-login/route req)
-      "/song" (route-song/route req)
-      ;; "/song" (middleware/check-token route-song/route req)
-      "/search" (middleware/check-token route-search/route req)
       "/register" (middleware/check-master-key route-register/route req)
+      "/login" (route-login/route req)
+      "/song" (middleware/check-token route-song/route req)
+      "/search" (middleware/check-token route-search/route req)
+      "/playlist" (middleware/check-token route-playlist/route req)
       (route-not-found/route))))

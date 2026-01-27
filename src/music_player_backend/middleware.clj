@@ -20,12 +20,12 @@
     (if (empty? auth-token)
       (server/respond "Missing token" :status 401)
       (let [user-token (string/trim (string/replace auth-token #"Bearer " ""))
-            valid-token (try
+            token-data (try
                           (jwt/unsign user-token secret-key)
-                          true
+
                           (catch Exception e
                             (println "An error ocurred:" (.getMessage e))
                             false))]
-        (if valid-token
-          (route req)
+        (if token-data
+          (route (assoc req :user-data token-data))
           (server/respond "Invalid token" :status 401))))))
