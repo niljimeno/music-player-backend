@@ -14,7 +14,6 @@
     (case uri
       "/register" (middleware/check-master-key route-register/route req)
       "/login" (route-login/route req)
-
       "/song" (middleware/check-token route-song/route req)
       "/search" (middleware/check-token route-search/route req)
       "/playlist" (middleware/check-token route-playlist/route req)

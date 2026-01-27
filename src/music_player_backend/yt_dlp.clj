@@ -12,6 +12,7 @@
   (:out (sh "yt-dlp"
             "-x"
             "--extract-audio"
+            "--write-thumbnail"
             "-o"
             path
             yt-url)))

@@ -51,8 +51,8 @@
      ;; :insert data
      :insert (jdbc/insert! db table data)
 
-     ;; :delete {:new data :id id}
-     :update (jdbc/update! db table (:new data)
+     ;; :update data
+     :update (jdbc/update! db table (dissoc data :id)
                            ["id = ?" (:id data)])
 
      ;; :delete id
@@ -80,13 +80,6 @@
                        (map id-less)
                        (map #(assoc % :playlistid playlist-id)))]
 
-    (println "Previous:" previous-songs)
-    (println "New:" new-songs "yay")
-    (println "Change:" (filter #(not (in? % previous-songs))
-                               new-songs))
-    (println "NChange:" (filter #(not (in? % new-songs))
-                                previous-songs))
-
     (->> (filter #(not (in? % previous-songs))
                  new-songs)
          (map #(assoc % :playlistid playlist-id))
@@ -100,7 +93,10 @@
                               (:songid %) playlist-id (:tracknumber %)]))
          doall)))
 
-;; create playlist: needs user id
+(defn get-user-data [userid]
+  {:songs (crud :songs :read [:userid userid])
+   :playlists (crud :playlists :read [:userid userid])
+   :connections (crud :connections :read [:userid userid])})
 
 (defn get-userid [username]
   (jdbc/query db ["SELECT id FROM users

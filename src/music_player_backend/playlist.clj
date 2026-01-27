@@ -17,11 +17,9 @@
 
 (defn update-playlist [data]
   (try
-    (println data)
     (let [playlist (jdbc/query db/db ["SELECT name FROM playlists
                                        WHERE userid = ? AND id = ?" (:userid data) (:id data)])]
 
-      (println "entra")
       (if (empty? playlist)
         (server/respond "Playlist does not exist" :status 404)
 
