@@ -18,8 +18,8 @@
 
         [:playlists
          [[:id :integer :primary :key :autoincrement]
-          [:userId :int]
-          [:name :text :unique]]]
+          [:name :text]
+          [:userid :int]]]
 
         [:songs
          [[:id :integer :primary :key :autoincrement]
@@ -28,15 +28,15 @@
 
         [:connections
          [[:id :integer :primary :key :autoincrement]
-          [:songId :integer]
-          [:playlistId :integer]
-          [:trackNumber :integer]]]]))
+          [:songid :integer]
+          [:playlistid :integer]
+          [:tracknumber :integer]]]]))
 
 (defn crud-delete
   [table data]
   (case table
-    :songs (jdbc/delete! db :connections ["songId = ?" data])
-    :playlists (jdbc/delete! db :connections ["playlistId = ?" data]))
+    :songs (jdbc/delete! db :connections ["songid = ?" data])
+    :playlists (jdbc/delete! db :connections ["playlistid = ?" data]))
   (jdbc/delete! db table ["id = ?" data]))
 
 (defn crud
@@ -97,6 +97,10 @@
   {:songs (crud :songs :read [:userid userid])
    :playlists (crud :playlists :read [:userid userid])
    :connections (crud :connections :read [:userid userid])})
+
+(defn get-userid [username]
+  (jdbc/query db ["SELECT id FROM users
+                   WHERE username = ?" username]))
 
 (defn create-db []
   (jdbc/execute! db ["PRAGMA foreign_keys = ON;"])
