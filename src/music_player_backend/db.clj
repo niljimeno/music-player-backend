@@ -24,7 +24,8 @@
         [:songs
          [[:id :integer :primary :key :autoincrement]
           [:name :text]
-          [:url :text]]]
+          [:url :text]
+          [:userid :int]]]
 
         [:connections
          [[:id :integer :primary :key :autoincrement]
