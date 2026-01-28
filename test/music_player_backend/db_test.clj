@@ -17,7 +17,7 @@
                     :userId 0})
   (db/crud :playlists
            :update {:id 1
-                    :new {:name "Temitas"}})
+                    :name "Temitas"})
   (db/crud :songs
            :insert {:name "El rap de fernanfloo"})
 
@@ -48,4 +48,3 @@
                               :tracknumber 2}]})
 
   (println "Connections:" (db/crud :connections :read)))
-
