@@ -16,7 +16,7 @@
         ["/playlist" :put] (playlist/update-playlist data)
         ["/playlist" :delete] (playlist/delete-playlist data)
 
-        ["/playlist/songs" :put] (playlist/update-playlist-list data)
+        ["/playlist/tracks" :put] (playlist/update-playlist-list data)
 
         (server/respond "Unknown request" :status 405))
 

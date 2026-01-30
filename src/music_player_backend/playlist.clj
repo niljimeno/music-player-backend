@@ -6,14 +6,15 @@
 (defn add-playlist [data]
   (try
     (let [result (db/crud :playlists
-                          :insert data)]
+                          :insert data)
+          id (-> result first first second str)]
 
-      (println "Inserted playlist:" result)
-      (server/respond result :status 201))
+      (println "Playlist added - id:" id)
+      (server/respond id :status 201))
 
     (catch Exception e
-      (println "An error ocurred:" (.getMessage e))
-      (server/respond "Error inserting playlist" :status 400))))
+      (println "Error adding playlist:" (.getMessage e))
+      (server/respond "Error adding playlist" :status 400))))
 
 (defn update-playlist [data]
   (try
@@ -25,11 +26,11 @@
 
         (let [result (db/crud :playlists
                               :update data)]
-          (println "Updated playlist" playlist ": " result)
-          (server/respond result :status 200))))
+          (println "Updated playlist" playlist "->" (:name data) "-" result)
+          (server/respond "Playlist updated" :status 200))))
 
     (catch Exception e
-      (println "An error ocurred:" (.getMessage e))
+      (println "Error updating playlist:" (.getMessage e))
       (server/respond "Error updating playlist" :status 400))))
 
 (defn delete-playlist [data]
@@ -41,12 +42,12 @@
 
         (let [result (db/crud :playlists
                               :delete (:id data))]
-          (println "Removed playlist" playlist ": " result)
-          (server/respond result :status 200))))
+          (println "Removed playlist" playlist "-" result)
+          (server/respond "Playlist removed" :status 200))))
 
     (catch Exception e
-      (println "An error ocurred:" (.getMessage e))
-      (server/respond "Error deleting playlist" :status 400))))
+      (println "Error removing playlist:" (.getMessage e))
+      (server/respond "Error removing playlist" :status 400))))
 
 (defn add-track [data]
   (try
@@ -55,15 +56,16 @@
 
       (if (empty? song)
         (let [result (db/crud :songs
-                              :insert data)]
-          (println "Inserted song:" result)
-          (server/respond result :status 200))
+                              :insert data)
+              id (-> result first first second str)]
+          (println "Track added - id:" id)
+          (server/respond id :status 200))
 
-        (server/respond "Song already exists" :status 409)))
+        (server/respond "Track already exists" :status 409)))
 
     (catch Exception e
-      (println "An error ocurred:" (.getMessage e))
-      (server/respond "Error Inserting song" :status 400))))
+      (println "Error adding track:" (.getMessage e))
+      (server/respond "Error adding track" :status 400))))
 
 (defn update-track [data]
   (try
@@ -71,16 +73,16 @@
                                    WHERE userid = ? AND id = ?" (:userid data) (:id data)])]
 
       (if (empty? song)
-        (server/respond "Song does not exist" :status 404)
+        (server/respond "Track does not exist" :status 404)
 
         (let [result (db/crud :songs
                               :update data)]
-          (println "Updated song" song ":" result)
-          (server/respond result :status 200))))
+          (println "Updated track" song "->" (:name data) "-" result)
+          (server/respond "Track updated" :status 200))))
 
     (catch Exception e
-      (println "An error ocurred:" (.getMessage e))
-      (server/respond "Error updating song" :status 400))))
+      (println "Error updating track:" (.getMessage e))
+      (server/respond "Error updating track" :status 400))))
 
 (defn delete-track [data]
   (try
@@ -88,29 +90,35 @@
                                    WHERE userid = ? AND id = ?" (:userid data) (:id data)])]
 
       (if (empty? song)
-        (server/respond "Song does not exist" :status 404)
+        (server/respond "Track does not exist" :status 404)
 
         (let [result (db/crud :songs
                               :delete data)]
-          (println "Deleted song:" result)
-          (server/respond result :status 200))))
+          (println "Removed track:" song "-" result)
+          (server/respond "Track removed:" :status 200))))
 
     (catch Exception e
-      (println "An error ocurred:" (.getMessage e))
-      (server/respond "Error deleting song" :status 400))))
+      (println "Error removed track:" (.getMessage e))
+      (server/respond "Error removed track" :status 400))))
+
+(defn set-playlist-map [index songid]
+  {:songid songid
+   :tracknumber (+ index 1)})
 
 (defn update-playlist-list [data]
   (try
     (let [playlist (jdbc/query db/db ["SELECT name FROM playlists
                                        WHERE userid = ? AND id = ?" (:userid data) (:id data)])]
-  
+
       (if (empty? playlist)
         (server/respond "Playlist does not exist" :status 404)
-  
-        (let [result (db/update-playlist data)]
-          (println "Updated playlist" playlist ":" result)
-          (server/respond result :status 200))))
-  
+
+        (let [data (assoc data :new (map-indexed set-playlist-map (:new data)))
+              result (db/update-playlist data)]
+
+          (println "Updated playlist" playlist "-" result)
+          (server/respond "Updated playlist tracks" :status 200))))
+
     (catch Exception e
-      (println "An error ocurred:" (.getMessage e))
-      (server/respond "Error updating playlist" :status 400))))
+      (println "Error updating playlist tracks:" (.getMessage e))
+      (server/respond "Error updating playlist tracks" :status 400))))
