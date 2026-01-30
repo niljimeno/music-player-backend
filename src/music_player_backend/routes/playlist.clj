@@ -5,16 +5,19 @@
             [music-player-backend.db :as db]))
 
 (defn route
-  "Route to add a new playlist"
+  "Route to handle playlist requests"
   [req]
   (let [userid (db/get-userid (:username (:user-data req)))
-        data (assoc (json/json-from-request req) :userid userid)] 
+        data (assoc (json/json-from-request req) :userid userid)]
 
     (if userid
-      (case (:request-method req)
-        :post (playlist/add-playlist data)
-        :put (playlist/update-playlist data)
-        :delete (playlist/delete-playlist data)
+      (case [(:uri req) (:request-method req)]
+        ["/playlist" :post] (playlist/add-playlist data)
+        ["/playlist" :put] (playlist/update-playlist data)
+        ["/playlist" :delete] (playlist/delete-playlist data)
+
+        ["/playlist/tracks" :put] (playlist/update-playlist-list data)
+
         (server/respond "Unknown request" :status 405))
 
       (server/respond "User not found" :status 404))))
