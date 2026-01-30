@@ -1,7 +1,7 @@
 FROM alpine:3.18
 
 # add general dependencies
-RUN apk add git make
+RUN apk add git make zip
 
 # install yt-dlp
 RUN apk add python3 ffmpeg
