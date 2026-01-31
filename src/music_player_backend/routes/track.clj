@@ -8,7 +8,7 @@
   "Route to handle track requests in playlists"
   [req]
   (let [userid (db/get-userid (:username (:user-data req)))
-        data (assoc (json/json-from-request req) :userid userid)] 
+        data (assoc (json/json-from-request req) :userid userid)]
 
     (if userid
       (case (:request-method req)

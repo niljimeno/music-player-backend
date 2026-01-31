@@ -100,8 +100,10 @@
    :connections (crud :connections :read [:userid userid])})
 
 (defn get-userid [username]
-  (jdbc/query db ["SELECT id FROM users
-                   WHERE username = ?" username]))
+  (->> (jdbc/query db ["SELECT id FROM users
+                        WHERE username = ?" username])
+       first
+       (:id)))
 
 (defn create-db []
   (jdbc/execute! db ["PRAGMA foreign_keys = ON;"])
