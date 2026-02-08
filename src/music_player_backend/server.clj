@@ -5,6 +5,11 @@
   "Template for HTTP responses"
   [body & {:keys [status headers] :or {status 200
                                        headers {"content-type" "text/plain"}}}]
+  (println (-> headers
+               (assoc "Access-Control-Allow-Origin" "*")
+               (assoc "Access-Control-Allow-Methods" "GET,POST,PUT,DELETE,OPTIONS,PATCH")
+               (assoc "Access-Control-Allow-Headers" "Content-Type, Authorization")))
+
   {:status status
    :headers (-> headers
                 (assoc "Access-Control-Allow-Origin" "*")
