@@ -5,7 +5,9 @@
   "Template for HTTP responses"
   [body & {:keys [status headers] :or {status 200
                                        headers {"content-type" "text/plain"
-                                                "Access-Control-Allow-Origin" "*"}}}]
+                                                "Access-Control-Allow-Origin" "*"
+                                                "Access-Control-Allow-Methods" "GET,POST,PUT,DELETE,OPTIONS,PATCH"
+                                                "Access-Control-Allow-Headers" "Content-Type, Authorization"}}}]
   {:status status
    :headers headers
    :body body})
