@@ -4,12 +4,12 @@
 (defn respond
   "Template for HTTP responses"
   [body & {:keys [status headers] :or {status 200
-                                       headers {"content-type" "text/plain"
-                                                "Access-Control-Allow-Origin" "*"
-                                                "Access-Control-Allow-Methods" "GET,POST,PUT,DELETE,OPTIONS,PATCH"
-                                                "Access-Control-Allow-Headers" "Content-Type, Authorization"}}}]
+                                       headers {"content-type" "text/plain"}}}]
   {:status status
-   :headers headers
+   :headers (-> headers
+                (assoc "Access-Control-Allow-Origin" "*")
+                (assoc "Access-Control-Allow-Methods" "GET,POST,PUT,DELETE,OPTIONS,PATCH")
+                (assoc "Access-Control-Allow-Headers" "Content-Type, Authorization"))
    :body body})
 
 (defn- get-extension
