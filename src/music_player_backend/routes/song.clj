@@ -11,23 +11,26 @@
   (let [audio (->> (re-seq #"\[ExtractAudio\] (.*)"
                            dlp-output)
                    first first
-                   (drop-while #(not (= % \/)))
+                   (drop-while (not= \/))
                    (drop 1) ;; drop the /
                    (apply str))
 
         thumbnail (do (println "Working with" dlp-output)
                       (->> (re-seq #"\[info\] Writing video thumbnail(.*)"
                                    dlp-output)
-                           (#(do (println "Got" (drop-while (fn [x] (not (= x \/))) (first (first %))))
+                           (#(do (println "Got"
+                                          (drop-while
+                                           (fn [x] (not (= x \/)))
+                                           (first (first %))))
                                  %))
                            first first
-                           (drop-while #(not (= % \/)))
+                           (drop-while (not= \/))
                            (drop 1) ;; drop the /
                            (apply str)))]
     {:audio (if (some? (re-find #"the file is already in a common audio format" audio))
               (->> (String. audio)
                    reverse
-                   (drop-while #(not (= % \;)))
+                   (drop-while (not= \;))
                    (drop 1)
                    reverse
                    (apply str))
@@ -35,7 +38,7 @@
      :thumbnail thumbnail
      :zip (->> thumbnail
                reverse
-               (drop-while #(not (= % \.))) ;; drop extension
+               (drop-while (not= \.)) ;; drop extension
                reverse
                (apply str)
                (#(str % "zip")))}))
