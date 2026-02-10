@@ -55,9 +55,12 @@
   [req]
   (let [data (json/json-from-request req)
         url (:url data)
-        filenames (get-output-names (yt-dlp/download-song "resources/%(title)s.%(ext)s" url))
+        dlp-output (yt-dlp/download-song "resources/%(title)s.%(ext)s" url)
+        filenames (get-output-names dlp-output)
         path "resources/"]
 
+    (println dlp-output)
+    
     (try
       (sh/sh "zip"
              (str path (:zip filenames))
