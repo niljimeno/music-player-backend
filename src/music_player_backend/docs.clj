@@ -75,6 +75,8 @@
                      :delete {:tags ["database"]
                               :parameters {:body Delete}}}
 
+           "/backup" {:get {:tags ["database"]}}
+                      
            "/playlist/tracks" {:post {:tags ["database"]
                                       :parameters {:body UpdatePlaylist}}}}})
 

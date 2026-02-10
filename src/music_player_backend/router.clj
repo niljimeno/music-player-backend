@@ -8,6 +8,7 @@
             [music-player-backend.routes.search :as route-search]
             [music-player-backend.routes.register :as route-register]
             [music-player-backend.routes.playlist :as route-playlist]
+            [music-player-backend.routes.backup :as route-backup]
             [music-player-backend.routes.not-found :as route-not-found]))
 
 (defn handler
@@ -24,6 +25,7 @@
         "/search" (middleware/check-token route-search/route req)
         "/track" (middleware/check-token route-track/route req)
         "/playlist" (middleware/check-token route-playlist/route req)
+        "/backup" (middleware/check-token route-backup/route req)
         "/playlist/tracks" (middleware/check-token route-playlist/route req)
         "/docs/swagger.json" (docs/route)
         (if (.startsWith uri "/docs")
