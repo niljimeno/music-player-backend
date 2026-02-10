@@ -13,18 +13,20 @@
 (defn handler
   "Handle http requests and send them to the correct route function"
   [req]
-  (let [uri (:uri req)]
-    (println uri)
-    (case uri
-      "/register" (middleware/check-master-key route-register/route req)
-      "/login" (route-login/route req)
-      "/song" (middleware/check-token route-song/route req)
-      "/search" (middleware/check-token route-search/route req)
+  (if (= (:request-method req) :options)
+    (server/respond "" :status 204)
+    (let [uri (:uri req)]
+      (println uri)
+      (case uri
+        "/register" (middleware/check-master-key route-register/route req)
+        "/login" (route-login/route req)
+        "/song" (middleware/check-token route-song/route req)
+        "/search" (middleware/check-token route-search/route req)
+        "/track" (middleware/check-token route-track/route req)
+        "/playlist" (middleware/check-token route-playlist/route req)
+        "/playlist/tracks" (middleware/check-token route-playlist/route req)
+        "/docs/swagger.json" (docs/route)
+        (if (.startsWith uri "/docs")
+          (server/serve-static uri)
+          (route-not-found/route))))))
 
-      "/track" (middleware/check-token route-track/route req)
-      "/playlist" (middleware/check-token route-playlist/route req)
-      "/playlist/tracks" (middleware/check-token route-playlist/route req)
-      "/docs/swagger.json" (docs/route)
-      (if (.startsWith uri "/docs")
-        (server/serve-static uri)
-        (route-not-found/route)))))
