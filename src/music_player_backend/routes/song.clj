@@ -56,8 +56,8 @@
   (let [data (json/json-from-request req)
         url (:url data)
         dlp-output (-> (yt-dlp/download-song "resources/%(title)s.%(ext)s" url)
-                       (do (#(println "Haziendo tests" "Alex" %))
-                           #(%)))
+                       (#(do (println "Haziendo tests" "Alex" %)
+                             %)))
         filenames (get-output-names dlp-output)
         path "resources/"]
 
