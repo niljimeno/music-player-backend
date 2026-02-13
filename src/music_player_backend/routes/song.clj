@@ -7,11 +7,10 @@
 
 (defn get-output-names
   [dlp-output]
-  ;;
   (let [audio (->> (re-seq #"\[ExtractAudio\] (.*)"
                            dlp-output)
                    first first
-                   (drop-while (not= \/))
+                   (drop-while (partial not= \/))
                    (drop 1) ;; drop the /
                    (apply str))
 
@@ -24,13 +23,13 @@
                                            (first (first %))))
                                  %))
                            first first
-                           (drop-while (not= \/))
+                           (drop-while (partial not= \/))
                            (drop 1) ;; drop the /
                            (apply str)))]
     {:audio (if (some? (re-find #"the file is already in a common audio format" audio))
               (->> (String. audio)
                    reverse
-                   (drop-while (not= \;))
+                   (drop-while (partial not= \;))
                    (drop 1)
                    reverse
                    (apply str))
@@ -38,7 +37,7 @@
      :thumbnail thumbnail
      :zip (->> thumbnail
                reverse
-               (drop-while (not= \.)) ;; drop extension
+               (drop-while (partial not= \.)) ;; drop extension
                reverse
                (apply str)
                (#(str % "zip")))}))
