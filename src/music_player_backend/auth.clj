@@ -1,16 +1,16 @@
 (ns music-player-backend.auth
-  (:require [clojure.java.jdbc :as jdbc]
-            [music-player-backend.db :as db]
-            [buddy.sign.jwt :as jwt]
+  (:require [music-player-backend.db-mg :as db]
             [environ.core :refer [env]]
-            [buddy.hashers :as hashers])
+            [buddy.hashers :as hashers]
+            [buddy.sign.jwt :as jwt])
   (:gen-class))
 
 (defn insert-user [data]
-  (let [hashed-data (assoc data :password (hashers/derive (:password data) {:alg :argon2id}))]
-    (jdbc/insert! db/db :users hashed-data)
-    (println "Inserted user:" (:username hashed-data) "| hashed-pass:" (:password hashed-data))
-    :user-created))
+  (let [hashed-data (assoc data :password (hashers/derive (:password data) {:alg :argon2id}))
+        new-user (db/insert-data "users" hashed-data)]
+    
+    (println "Inserted user:" (:username hashed-data))
+    (str (:_id new-user))))
 
 (defn check-password [user-password db-password]
   (hashers/check user-password db-password))
@@ -22,9 +22,9 @@
   (try
     (let [username (:username data)
           password (:password data)
-          result (db/get-userid username)]
-      
-      (if (empty? result)
+          user-data (db/get-user username)]
+
+      (if (nil? user-data)
         (insert-user {:username username
                       :password password})
         :already-exist))
@@ -36,16 +36,16 @@
 (defn login-user [data]
   (try
     (let [username (:username data)
-          user-password (:password data)
-          result (jdbc/query db/db ["SELECT password FROM users
-                                     WHERE username = ?" username])]
+          password (:password data)
+          user-data (db/get-user username)]
 
-      (if (empty? result)
+      (if (nil? user-data)
         :not-found
-        (let [db-password (:password (first result))]
+        (let [db-password (:password user-data)]
 
-          (if (check-password user-password db-password)
-            (get-token {:username username})
+          (if (check-password password db-password)
+            (get-token {:_id (str (:_id user-data))
+                        :username username})
             :incorrect-password))))
 
     (catch Exception e

@@ -10,7 +10,7 @@
         result (auth/register-user data)]
 
     (case result
-      :user-created (server/respond "User registered" :status 201)
       :already-exist (server/respond "User already exists" :status 409)
-      :user-error (server/respond "Server error" :status 400))
+      :user-error (server/respond "Server error" :status 400)
+      (server/respond result :status 201))
     ))

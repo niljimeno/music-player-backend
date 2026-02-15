@@ -11,6 +11,7 @@
                  [org.clojure/java.jdbc "0.7.12"]
                  [org.clojure/data.json "2.5.1"]
                  [org.xerial/sqlite-jdbc "3.51.1.0"]
+                 [com.novemberain/monger "3.5.0"]
                  [metosin/ring-swagger "1.0.0"]
                  [metosin/ring-swagger-ui "5.20.0"]]
   :main ^:skip-aot music-player-backend.core
