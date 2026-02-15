@@ -30,7 +30,7 @@
 
 (s/defschema UpdatePlaylist
   {:id s/Int
-   :new [s/Int]})
+   :track-ids [s/Int]})
 
 (def ^:private schema
   {:info {:version "1.0.0"
