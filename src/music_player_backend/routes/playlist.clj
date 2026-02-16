@@ -2,24 +2,23 @@
   (:require [music-player-backend.playlist :as playlist]
             [music-player-backend.server :as server]
             [music-player-backend.json :as json]
-            [music-player-backend.db :as db]))
+            [music-player-backend.db-mg :as db]))
 
 (defn route
   "Route to handle playlist requests"
   [req]
-  (let [userid (db/get-userid (:username (:user-data req)))
-        data (assoc (json/json-from-request req) :userid userid)]
+  (let [user (db/get-user (:username (:user-data req)))
+        data (assoc (json/json-from-request req) :user_id (:_id (:user-data req)))]
 
-    (println "user id:" userid)
-    (println "user data:" (:user-data req))
-
-    (if userid
+    (println data)
+    
+    (if user
       (case [(:uri req) (:request-method req)]
-        ["/playlist" :post] (playlist/add-playlist data)
-        ["/playlist" :put] (playlist/update-playlist data)
-        ["/playlist" :delete] (playlist/delete-playlist data)
+        ["/playlist" :post] (playlist/add data)
+        ["/playlist" :put] (playlist/edit data)
+        ["/playlist" :delete] (playlist/delete data)
 
-        ["/playlist/tracks" :put] (playlist/update-playlist-list data)
+        ["/playlist/tracks" :put] (playlist/update-list data)
 
         (server/respond "Unknown request" :status 405))
 

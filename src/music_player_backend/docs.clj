@@ -3,34 +3,33 @@
    [music-player-backend.server :as server]
    [ring.swagger.swagger2 :as rs]
    [clojure.data.json :as json]
-   [schema.core :as s]
-   [music-player-backend.playlist :as playlist]))
+   [schema.core :as s]))
 
 (s/defschema Playlist
-  {:id s/Int
+  {:id s/Str
    :name s/Str})
 
 (s/defschema PlaylistPost
   (dissoc Playlist :id))
 
 (s/defschema Delete
-  {:id s/Int})
+  {:id s/Str})
 
-(s/defschema Song
-  {:id s/Int
+(s/defschema Track
+  {:id s/Str
    :name s/Str
    :url s/Str})
 
-(s/defschema SongPost
-  (dissoc Song :id))
+(s/defschema TrackPost
+  (dissoc Track :id))
 
 (s/defschema Login
   {:username s/Str,
    :password s/Str})
 
 (s/defschema UpdatePlaylist
-  {:id s/Int
-   :new [s/Int]})
+  {:id s/Str
+   :track-ids [s/Str]})
 
 (def ^:private schema
   {:info {:version "1.0.0"
@@ -69,9 +68,9 @@
                                  :parameters {:body Delete}}}
 
            "/track" {:post {:tags ["database"]
-                            :parameters {:body SongPost}}
+                            :parameters {:body TrackPost}}
                      :put {:tags ["database"]
-                           :parameters {:body Song}}
+                           :parameters {:body Track}}
                      :delete {:tags ["database"]
                               :parameters {:body Delete}}}
 
