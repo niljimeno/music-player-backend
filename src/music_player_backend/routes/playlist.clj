@@ -10,8 +10,8 @@
   (let [user (db/get-user (:username (:user-data req)))
         data (assoc (json/json-from-request req) :user_id (:_id (:user-data req)))]
 
-    (println "user data:" (:user-data req))
-
+    (println data)
+    
     (if user
       (case [(:uri req) (:request-method req)]
         ["/playlist" :post] (playlist/add data)

@@ -17,6 +17,14 @@
   (mc/find-one-as-map db "playlists" {:user_id user-id
                                       :_id (ObjectId. playlist-id)}))
 
+(defn get-track [user-id track-id]
+  (mc/find-one-as-map db "tracks" {:user_id user-id
+                                   :_id (ObjectId. track-id)}))
+
+(defn get-track-by-url [user-id url]
+  (mc/find-one-as-map db "tracks" {:user_id user-id
+                                   :url url}))
+
 (defn insert-data [table data]
   (mc/insert-and-return db table data))
 

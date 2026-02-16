@@ -2,19 +2,21 @@
   (:require [music-player-backend.track :as track]
             [music-player-backend.server :as server]
             [music-player-backend.json :as json]
-            [music-player-backend.db :as db]))
+            [music-player-backend.db-mg :as db]))
 
 (defn route
   "Route to handle track requests"
   [req]
-  (let [userid (db/get-userid (:username (:user-data req)))
-        data (assoc (json/json-from-request req) :userid userid)]
+  (let [user (db/get-user (:username (:user-data req)))
+        data (assoc (json/json-from-request req) :user_id (:_id (:user-data req)))]
 
-    (if userid
+    (println data)
+
+    (if user
       (case (:request-method req)
-        :post (track/add-track data)
-        :put (track/update-track data)
-        :delete (track/delete-track data)
+        :post (track/add data)
+        :put (track/edit data)
+        :delete (track/delete data)
         (server/respond "Unknown request" :status 405))
 
       (server/respond "User not found" :status 404))))
